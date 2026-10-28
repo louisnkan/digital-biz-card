@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#151820">
+  <meta name="description" content="My digital business card. Connect with me, save my contact, and scan my QR code.">
+  <title>Digital Business Card | Louis Nkan</title>
+
+  <style>
+    :root {
+      --bg: #151820;
+      --surface: #1b1f29;
+      --text: #f0f2f7;
+      --muted: #939bad;
+      --accent: #63e6be;
+      --shadow-dark: #0c0e14;
+      --shadow-light: #252a36;
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 28px 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 390px;
+      padding: 32px 23px 24px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.025);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow:
+        12px 12px 28px var(--shadow-dark),
+        -8px -8px 24px var(--shadow-light);
+      animation: appear 0.7s ease both;
+    }
+
+    .accent-glow {
+      position: absolute;
+      top: -115px;
+      left: 50%;
+      width: 240px;
+      height: 200px;
+      transform: translateX(-50%);
+      background: radial-gradient(
+        ellipse,
+        rgba(99, 230, 190, 0.13),
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+
+    .brand {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 29px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .brand-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(99, 230, 190, 0.6);
+    }
+
+    .avatar {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 106px;
+      height: 106px;
+      margin: 0 auto 20px;
+      border: 1px solid rgba(99, 230, 190, 0.25);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #202633, #151820);
+      box-shadow:
+        8px 8px 18px var(--shadow-dark),
+        -5px -5px 14px var(--shadow-light),
+        inset 0 0 0 5px rgba(255, 255, 255, 0.015);
+      color: var(--accent);
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+
+    .status {
+      position: absolute;
+      right: 2px;
+      bottom: 5px;
+      width: 17px;
+      height: 17px;
+      border: 4px solid var(--surface);
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(25px, 7vw, 30px);
+      font-weight: 750;
+      letter-spacing: -1.2px;
+    }
+
+    .job-title {
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: 0.3px;
+    }
+
+    .bio {
+      max-width: 280px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .section-label {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* QR CODE */
+
+    .qr-section {
+      margin-bottom: 25px;
+    }
+
+    .qr-shell {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 178px;
+      min-height: 178px;
+      padding: 12px;
+      border-radius: 19px;
+      background: var(--surface);
+      box-shadow:
+        inset 5px 5px 11px var(--shadow-dark),
+        inset -5px -5px 11px var(--shadow-light);
+    }
+
+    #qrcode {
+      display: grid;
+      place-items: center;
+      width: 154px;
+      min-height: 154px;
+      overflow: hidden;
+      border-radius: 7px;
+      background: #ffffff;
+    }
+
+    #qrcode img,
+    #qrcode canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .qr-caption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .qr-caption strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* SAVE CONTACT */
+
+    .save-btn {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 53px;
+      margin-bottom: 25px;
+      padding: 14px 18px;
+      border: 1px solid rgba(99, 230, 190, 0.3);
+      border-radius: 15px;
+      background: linear-gradient(135deg, #63e6be, #43cda4);
+      box-shadow:
+        5px 5px 12px var(--shadow-dark),
+        -3px -3px 10px var(--shadow-light);
+      color: #10251f;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        7px 8px 18px var(--shadow-dark),
+        0 0 18px rgba(99, 230, 190, 0.15);
+    }
+
+    .save-btn:active {
+      transform: scale(0.98);
+    }
+
+    .save-btn svg {
+      width: 19px;
+      height: 19px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* SOCIAL LINKS */
+
+    .socials {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .social-link {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      min-height: 75px;
+      padding: 10px 3px;
+      border: 1px solid rgba(255, 255, 255, 0.025);
+      border-radius: 15px;
+      background: var(--surface);
+      box-shadow:
+        5px 5px 10px var(--shadow-dark),
+        -4px -4px 10px var(--shadow-light);
+      color: var(--muted);
+      transition:
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .social-link:hover {
+      color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow:
+        5px 7px 13px var(--shadow-dark),
+        -3px -3px 10px var(--shadow-light);
+    }
+
+    .social-link svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .social-link .filled {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    .social-link span {
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    .footer {
+      padding-top: 17px;
+      border-top: 1px solid rgba(255, 255, 255, 0.045);
+      color: #737c8e;
+      font-size: 10px;
+      letter-spacing: 0.4px;
+    }
+
+    .footer span {
+      color: var(--accent);
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 10;
+      right: 16px;
+      bottom: 24px;
+      left: 16px;
+      width: fit-content;
+      max-width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 13px 19px;
+      border: 1px solid rgba(99, 230, 190, 0.2);
+      border-radius: 12px;
+      background: #202833;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 350px) {
+      .card {
+        padding: 27px 17px 20px;
+      }
+
+      .socials {
+        gap: 7px;
+      }
+
+      .social-link {
+        min-height: 68px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="accent-glow"></div>
+
+    <div class="brand">
+      <span class="brand-dot"></span>
+      Digital Business Card
+    </div>
+
+    <div class="avatar" aria-label="Louis Nkan initials">
+      LN
+      <span class="status" title="Available to connect"></span>
+    </div>
+
+    <h1>Louis Nkan</h1>
+
+    <p class="job-title">Mobile Developer & AI Creator</p>
+
+    <p class="bio">
+      Building useful digital experiences with mobile technology,
+      web development, and artificial intelligence.
+    </p>
+
+    <section class="qr-section" aria-labelledby="qr-heading">
+      <h2 class="section-label" id="qr-heading">Scan to Connect</h2>
+
+      <div class="qr-shell">
+        <div id="qrcode" role="img" aria-label="QR code linking to this digital business card">
+          <span style="color:#555;font-size:11px;padding:10px;text-align:center;">
+            Generating QR code...
+          </span>
+        </div>
+      </div>
+
+      <p class="qr-caption">
+        <strong>Your digital identity.</strong><br>
+        Scan to open this business card.
+      </p>
+    </section>
+
+    <button class="save-btn" id="saveContact" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 16V3"></path>
+        <path d="m7 8 5-5 5 5"></path>
+        <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path>
+      </svg>
+      Save Contact
+    </button>
+
+    <h2 class="section-label">Find Me Online</h2>
+
+    <nav class="socials" aria-label="Social media links">
+
+      <!-- Replace each example URL with your actual profile URL. -->
+
+      <a class="social-link"
+         href="https://github.com/louisnkan"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="GitHub profile">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 6v-3.9a3.4 3.4 0 0 0-.9-2.7c3-.3 6.1-1.5 6.1-6.7a5.2 5.2 0 0 0-1.4-3.6 4.8 4.8 0 0 0-.1-3.6s-1.2-.4-3.7 1.4a13 13 0 0 0-6.7 0C5.8 1.1 4.6 1.5 4.6 1.5a4.8 4.8 0 0 0-.1 3.6A5.2 5.2 0 0 0 3.1 8.7c0 5.2 3.1 6.4 6.1 6.7a3.4 3.4 0 0 0-.9 2.7V22"></path>
+        </svg>
+        <span>GitHub</span>
+      </a>
+
+      <a class="social-link"
+         href="https://www.linkedin.com/"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z"></path>
+          <rect x="2" y="9" width="4" height="12" rx="1"></rect>
+          <circle cx="4" cy="4" r="2"></circle>
+        </svg>
+        <span>LinkedIn</span>
+      </a>
+
+      <a class="social-link"
+         href="https://www.youtube.com/"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="YouTube channel">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22 12s0-4-1-5-4-1-9-1-8 0-9 1-1 5-1 5 0 4 1 5 4 1 9 1 8 0 9-1 1-5 1-5Z"></path>
+          <path d="m10 9 5 3-5 3Z"></path>
+        </svg>
+        <span>YouTube</span>
+      </a>
+
+      <a class="social-link"
+         href="https://wa.me/"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="WhatsApp contact">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20l1.2-5.3A8.4 8.4 0 1 1 21 11.5Z"></path>
+          <path d="M8.5 8.5c.5 2.5 2.5 4.5 5 5l1.3-1.3 2 1c-.2 1.5-1.2 2.3-2.8 2.1-3.8-.6-6.5-3.3-7.1-7.1-.2-1.6.6-2.6 2.1-2.8l1 2Z"></path>
+        </svg>
+        <span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <footer class="footer">
+      Designed with <span>♥</span> by Louis Nkan
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- QRCode.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    "use strict";
+
+    /*
+      PERSONALIZE YOUR CARD HERE.
+      Update the contact information and social URLs
+      before publishing this file.
+    */
+
+    const CONTACT = {
+      firstName: "Louis",
+      lastName: "Nkan",
+      fullName: "Louis Nkan",
+      jobTitle: "Mobile Developer & AI Creator",
+      organization: "LOUIS IV STUDIO",
+      phone: "",
+      email: "",
+      website: "",
+      socialLinks: {
+        github: "https://github.com/louisnkan",
+        linkedin: "https://www.linkedin.com/",
+        youtube: "https://www.youtube.com/",
+        whatsapp: "https://wa.me/"
+      }
+    };
+
+    const qrContainer = document.getElementById("qrcode");
+    const saveButton = document.getElementById("saveContact");
+    const toast = document.getElementById("toast");
+
+    let toastTimeout;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(toastTimeout);
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2800);
+    }
+
+    /*
+      Automatically generates a QR code for the current page URL.
+      On a deployed website, scanning it opens this exact page.
+      Local preview URLs may only work on the device running them.
+    */
+
+    function generateQRCode() {
+      if (typeof QRCode === "undefined") {
+        qrContainer.innerHTML = `
+          <span style="padding:12px;color:#555;font-size:11px;text-align:center;">
+            QR library unavailable.<br>Check your internet connection.
+          </span>
+        `;
+        return;
+      }
+
+      const currentURL = window.location.href;
+
+      qrContainer.innerHTML = "";
+
+      new QRCode(qrContainer, {
+        text: currentURL,
+        width: 154,
+        height: 154,
+        colorDark: "#151820",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    /*
+      Creates and downloads a vCard contact file.
+      Optional fields are included only when populated.
+    */
+
+    function saveContact() {
+      const lines = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N:${CONTACT.lastName};${CONTACT.firstName};;;`,
+        `FN:${CONTACT.fullName}`,
+        `ORG:${CONTACT.organization}`,
+        `TITLE:${CONTACT.jobTitle}`
+      ];
+
+      if (CONTACT.phone.trim()) {
+        lines.push(`TEL;TYPE=CELL:${CONTACT.phone}`);
+      }
+
+      if (CONTACT.email.trim()) {
+        lines.push(`EMAIL;TYPE=INTERNET:${CONTACT.email}`);
+      }
+
+      if (CONTACT.website.trim()) {
+        lines.push(`URL:${CONTACT.website}`);
+      }
+
+      lines.push("END:VCARD");
+
+      const vcard = lines.join("\r\n") + "\r\n";
+
+      const blob = new Blob(
+        [vcard],
+        { type: "text/vcard;charset=utf-8" }
+      );
+
+      const objectURL = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = objectURL;
+      link.download = "Louis-Nkan.vcf";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(objectURL), 1000);
+
+      showToast("Contact card downloaded. Open the file to save the contact.");
+    }
+
+    saveButton.addEventListener("click", saveContact);
+
+    /*
+      Initialize QR generation when the page is ready.
+      If the CDN is blocked, provide a helpful fallback.
+    */
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", generateQRCode);
+    } else {
+      generateQRCode();
+    }
+
+    /*
+      Regenerate the QR code when the browser history changes.
+    */
+
+    window.addEventListener("popstate", generateQRCode);
+  </script>
+</body>
+</html>
