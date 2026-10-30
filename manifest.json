@@ -1,0 +1,19 @@
+{
+  "name": "Digital Business Card",
+  "short_name": "Louis Nkan",
+  "description": "Louis Nkan's digital business card. Connect, scan, and save contact details.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#151820",
+  "theme_color": "#151820",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
