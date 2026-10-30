@@ -4,6 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#151820">
+  <!-- PWA Configuration -->
+<link rel="manifest" href="./manifest.json">
+
+<meta name="theme-color" content="#151820">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- iOS Home Screen Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Louis Nkan">
+
+<link rel="apple-touch-icon" href="./icon.png">
+
+<!-- Service Worker Registration -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then((registration) => {
+          console.log(
+            "PWA service worker registered:",
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error(
+            "Service worker registration failed:",
+            error
+          );
+        });
+    });
+  }
+</script>
   <meta name="description" content="My digital business card. Connect with me, save my contact, and scan my QR code.">
   <title>Digital Business Card | Louis Nkan</title>
 
